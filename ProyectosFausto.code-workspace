@@ -1,0 +1,17 @@
+{
+  "folders": [
+    {
+      "path": "..",
+    },
+    {
+      "path": "../app2026-nextjs",
+    },
+    {
+      "path": ".",
+    },
+  ],
+  "settings": {
+    "prettier.disableLanguages": ["html"],
+    "git.ignoreLimitWarning": true,
+  },
+}

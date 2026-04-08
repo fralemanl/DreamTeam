@@ -1,0 +1,29 @@
+# Base de datos SQLite - NUNCA subir al repo
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+
+# Entornos virtuales Python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# Variables de entorno
+.env
+.env.local
+.env.*.local
+
+# Node
+node_modules/
+dist/
+.vite/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
