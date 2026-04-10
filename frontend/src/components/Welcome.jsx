@@ -36,7 +36,7 @@ export default function Welcome({user}) {
         <img
           src="/img/logo.png"
           alt="Logo"
-          className="w-40 sm:w-80 h-auto object-contain drop-shadow-lg bg-white rounded-lg p-2 mx-auto"
+          className="w-40 sm:w-80 h-auto object-contain drop-shadow-lg rounded-lg p-2 mx-auto"
         />
         <div className="text-center md:text-left w-full">
           <h1 className="text-2xl sm:text-4xl md:text-5xl font-black text-green-400 mb-2 drop-shadow-lg">
