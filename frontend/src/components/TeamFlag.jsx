@@ -16,7 +16,7 @@ const countryData = {
   // CONMEBOL
   Argentina: "AR.png",
   Brasil: "BR.png",
-  Uruguay: "UY.png",
+  Uruguay: "Uy.png",
   Colombia: "CO.png",
   Chile: "CL.png", // Por clasificar
   Ecuador: "EC.png",
@@ -68,13 +68,13 @@ const countryData = {
   Camerún: "CM.png", // Por clasificar
   Nigeria: "NG.png", // Por clasificar
   Egipto: "EG.png",
-  Argelia: "DZ.png",
+  Argelia: "dz.png",
   "Costa de Marfil": "CI.png",
   "Cabo Verde": "CV.png",
   "Sudáfrica": "za.png",
   "Congo": "CD.png",
   Seychelles: "SC.png",
-  Iraq: "IQ.png", // Por clasificar
+  Irak: "IQ.png", // Por clasificar
 
   // OFC
   "Nueva Zelanda": "NZ.png",
