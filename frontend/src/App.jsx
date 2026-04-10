@@ -72,8 +72,8 @@ function App() {
                 className="flex items-center gap-2 sm:gap-3 text-lg sm:text-2xl font-black text-white tracking-tight hover:text-green-400 transition-colors min-w-0"
               >
                 <img
-                  src="/img/integ.png"
-                  alt="Logo Integ"
+                  src="/img/logo.png"
+                  alt="Logo Park and Padel"
                   className="w-12 h-12 sm:w-20 sm:h-20 object-contain bg-white rounded shadow"
                   style={{marginBottom: 0}}
                 />
@@ -247,7 +247,7 @@ function App() {
         {/* Footer */}
         <footer className="bg-slate-800 text-white py-8 mt-12 border-t border-slate-700">
           <div className="container mx-auto px-4 flex flex-col items-center">
-            <img src="/img/integ.png" alt="Integ Logo" className="w-24 h-24 mb-4 object-contain bg-white rounded shadow" />
+            <img src="/img/logo.png" alt="Park and Padel Logo" className="w-24 h-24 mb-4 object-contain bg-white rounded shadow" />
           </div>
         </footer>
       </div>
