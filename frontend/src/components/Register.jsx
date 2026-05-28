@@ -109,25 +109,6 @@ const Register = () => {
               className="w-full px-3 py-2 mt-1 border border-indigo-500 bg-slate-800 text-white rounded-lg shadow focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 placeholder:text-slate-400"
             />
           </div>
-          {/* ----- 2. HERE IS THE NEW FIELD FOR THE COMPANY ----- */}
-          <div>
-            <label
-              htmlFor="company"
-              className="text-sm font-semibold text-slate-200"
-            >
-              Nombre de la empresa
-            </label>
-            <input
-              id="company"
-              name="company"
-              type="text"
-              value={formData.company}
-              onChange={handleChange}
-              placeholder="Opcional"
-              className="w-full px-3 py-2 mt-1 border border-indigo-400 bg-slate-800 text-white rounded-lg shadow focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-indigo-300 placeholder:text-slate-400"
-            />
-          </div>
-          {/* ------------------------------------------------------- */}
           <div>
             <label
               htmlFor="password"
