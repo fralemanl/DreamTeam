@@ -2,14 +2,18 @@ from fastapi import File, UploadFile
 from fastapi import Request
 # ...existing code...
 from pydantic import Field
-from database import SessionLocal, engine, Base
+try:
+    from .database import SessionLocal, engine, Base
+    from .models import User, Match, Prediction, ChampionPrediction
+except ImportError:
+    from database import SessionLocal, engine, Base
+    from models import User, Match, Prediction, ChampionPrediction
 import secrets
 import smtplib
 import os
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from datetime import timedelta
-from models import User, Match, Prediction, ChampionPrediction
 from pydantic import BaseModel
 from typing import Optional, List
 from fastapi import Body
@@ -179,7 +183,10 @@ app = FastAPI(title="Quiniela Mundial API")
 def run_migrations():
     """Crea tablas si no existen y agrega columnas nuevas (migracion automatica)."""
     from sqlalchemy import text
-    from database import Base as _Base, engine as _engine, SessionLocal as _SessionLocal
+    try:
+        from .database import Base as _Base, engine as _engine, SessionLocal as _SessionLocal
+    except ImportError:
+        from database import Base as _Base, engine as _engine, SessionLocal as _SessionLocal
     # Crear todas las tablas si la BD está vacía o es nueva
     _Base.metadata.create_all(bind=_engine)
     # Migraciones: agregar columnas nuevas si no existen
