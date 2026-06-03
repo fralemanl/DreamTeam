@@ -179,6 +179,16 @@ class UserUpdate(BaseModel):
 # FastAPI App
 app = FastAPI(title="Quiniela Mundial API")
 
+
+@app.get("/")
+def root_status():
+    return {"status": "ok", "service": "famquiniela-backend"}
+
+
+@app.get("/health")
+def health_check():
+    return {"status": "healthy"}
+
 @app.on_event("startup")
 def run_migrations():
     """Crea tablas si no existen y agrega columnas nuevas (migracion automatica)."""
@@ -209,18 +219,30 @@ def run_migrations():
 # CORS
 cors_origins_env = os.environ.get("CORS_ORIGINS", "")
 cors_origins = [o.strip() for o in cors_origins_env.split(",") if o.strip()]
+frontend_url = os.environ.get("FRONTEND_URL", "").strip()
+required_origins = [
+    "http://localhost:5173",
+    "http://localhost:3000",
+    "https://famquiniela.vercel.app",
+    "https://pnp-quiniela.vercel.app",
+]
 
 if not cors_origins:
-    cors_origins = [
-        "http://localhost:5173",
-        "http://localhost:3000",
-        "https://pnp-quiniela.vercel.app",
-    ]
+    cors_origins = required_origins.copy()
+
+for origin in required_origins:
+    if origin not in cors_origins:
+        cors_origins.append(origin)
+
+if frontend_url and frontend_url not in cors_origins:
+    cors_origins.append(frontend_url)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=cors_origins,
-    allow_credentials=True,
+    # Keep APIs reachable from Vercel previews and production even when origin vars drift.
+    allow_origins=["*"],
+    allow_origin_regex=r"https://.*\.vercel\.app$",
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )

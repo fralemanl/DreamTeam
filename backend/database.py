@@ -3,10 +3,21 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-if os.environ.get("RAILWAY_ENVIRONMENT"):
-    # En Railway: usa un volumen montado en /data para persistencia
-    # Si no hay volumen, cae a /tmp (los datos se pierden al redeploy)
+is_railway = any(
+    os.environ.get(var)
+    for var in (
+        "RAILWAY_ENVIRONMENT",
+        "RAILWAY_ENVIRONMENT_NAME",
+        "RAILWAY_PROJECT_ID",
+        "RAILWAY_SERVICE_ID",
+        "RAILWAY_STATIC_URL",
+    )
+)
+
+if is_railway:
+    # En Railway: usa /data si hay volumen; sin volumen usa /tmp (ephemeral)
     data_dir = "/data" if os.path.isdir("/data") else "/tmp"
+    os.makedirs(data_dir, exist_ok=True)
     db_path = os.path.join(data_dir, "quiniela.db")
 elif os.environ.get("RENDER") == "true":
     db_path = "/tmp/quiniela.db"

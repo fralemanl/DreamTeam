@@ -8,8 +8,9 @@ export const getChampionPrediction = (userId) => api.get(`/champion/${userId}`);
 export const exportPredictions = () => api.get("/export/predictions");
 import axios from "axios";
 
-const BASE = (import.meta.env.VITE_API_URL || "").replace(/\/$/, "");
-const API_BASE_URL = `${BASE}/api`;
+const envBase = (import.meta.env.VITE_API_URL || "").replace(/\/$/, "");
+// Prefer explicit backend URL from env; fallback to same-origin /api for local/proxy setups.
+const API_BASE_URL = envBase ? `${envBase}/api` : "/api";
 
 const api = axios.create({
   baseURL: API_BASE_URL,

@@ -55,7 +55,7 @@ const Register = () => {
               htmlFor="champion"
               className="text-sm font-semibold text-slate-200"
             >
-              ¿Quién será el campeón del Mundial?
+              ¿Quién será el campeón del Mundial? (Por 15 ptos)
             </label>
             <select
               id="champion"
