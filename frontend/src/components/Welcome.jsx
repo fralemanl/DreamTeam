@@ -46,7 +46,7 @@ export default function Welcome({user}) {
           </h1>
           <p className="text-base sm:text-lg md:text-xl text-slate-200 mb-4 max-w-xl mx-auto md:mx-0">
             Participa en el concurso oficial de predicciones del Mundial 2026,
-            donde competirás con tu familia Park and Padel y demostrarás tus conocimientos de fútbol.
+            donde competirás con tu familia y demostrarás tus conocimientos de fútbol.
           </p>
           <div className="flex flex-col md:flex-row gap-3 sm:gap-4 items-center md:items-start justify-center md:justify-start">
             <Link
