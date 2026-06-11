@@ -177,12 +177,12 @@ class UserUpdate(BaseModel):
     password: Optional[str] = None
 
 # FastAPI App
-app = FastAPI(title="Quiniela Mundial API")
+app = FastAPI(title="DreamTeam API")
 
 
 @app.get("/")
 def root_status():
-    return {"status": "ok", "service": "famquiniela-backend"}
+    return {"status": "ok", "service": "dreamteam-backend"}
 
 
 @app.get("/health")
@@ -223,8 +223,6 @@ frontend_url = os.environ.get("FRONTEND_URL", "").strip()
 required_origins = [
     "http://localhost:5173",
     "http://localhost:3000",
-    "https://famquiniela.vercel.app",
-    "https://pnp-quiniela.vercel.app",
 ]
 
 if not cors_origins:
@@ -903,8 +901,8 @@ from fastapi.responses import FileResponse
 
 @app.get("/download-db")
 def download_db():
-    db_path = "/tmp/quiniela.db"  # O usa "/tmp/quiniela.db" si tu db está ahí
-    return FileResponse(db_path, filename="quiniela.db")
+    db_path = "/tmp/dreamteam.db"  # O usa "/tmp/dreamteam.db" si tu db está ahí
+    return FileResponse(db_path, filename="dreamteam.db")
 
 @app.post("/api/import-matches")
 async def import_matches(request: Request, db: Session = Depends(get_db)):
@@ -937,7 +935,7 @@ async def import_matches(request: Request, db: Session = Depends(get_db)):
 
 @app.get("/")
 def root():
-    return {"message": "Quiniela Mundial API - Bienvenido!"}
+    return {"message": "DreamTeam API - Bienvenido!"}
 
 if __name__ == "__main__":
     import uvicorn

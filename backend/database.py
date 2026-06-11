@@ -18,12 +18,12 @@ if is_railway:
     # En Railway: usa /data si hay volumen; sin volumen usa /tmp (ephemeral)
     data_dir = "/data" if os.path.isdir("/data") else "/tmp"
     os.makedirs(data_dir, exist_ok=True)
-    db_path = os.path.join(data_dir, "quiniela.db")
+    db_path = os.path.join(data_dir, "dreamteam.db")
 elif os.environ.get("RENDER") == "true":
-    db_path = "/tmp/quiniela.db"
+    db_path = "/tmp/dreamteam.db"
 else:
     db_dir = os.path.dirname(os.path.abspath(__file__))
-    db_path = os.path.join(db_dir, "quiniela.db")
+    db_path = os.path.join(db_dir, "dreamteam.db")
     os.makedirs(db_dir, exist_ok=True)
 
 SQLALCHEMY_DATABASE_URL = f"sqlite:///{db_path}"

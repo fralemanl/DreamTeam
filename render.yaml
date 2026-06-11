@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: quiniela-backend
+    name: dreamteam-backend
     env: python
     plan: free
     buildCommand: "pip install -r requirements.txt"

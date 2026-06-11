@@ -2,7 +2,7 @@
 
 ## 1) Importar repositorio
 - Entra a Vercel y selecciona **Add New Project**.
-- Importa el repo `fralemanl/Quiniela-ESP`.
+- Importa el repo `fralemanl/famquiniela` (o el nuevo repo que crees para DreamTeam).
 
 ## 2) Configurar proyecto
 - **Framework Preset**: Vite
@@ -16,7 +16,7 @@ Nota: estas opciones ya estan reflejadas en `frontend/vercel.json`.
 Crea esta variable en Vercel (Project Settings -> Environment Variables):
 
 - `VITE_API_URL` = URL publica de tu backend en Railway, por ejemplo:
-  - `https://tu-backend.up.railway.app`
+  - `https://dreamteam-backend.up.railway.app`
 
 Puedes usar `frontend/.env.example` como referencia.
 
