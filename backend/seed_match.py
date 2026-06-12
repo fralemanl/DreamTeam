@@ -1,4 +1,7 @@
-from main import SessionLocal, Match
+try:
+    from .main import SessionLocal, Match
+except ImportError:
+    from main import SessionLocal, Match
 from datetime import datetime
 
 db = SessionLocal()
@@ -9,10 +12,10 @@ try:
         team_away="Sudafrica",
         match_date=datetime(2026, 6, 11, 18, 0),
         phase="Fase de Grupos",
-        group="Grupo A",
         stadium="Estadio Azteca, Ciudad de México, MX",
         score_home=None,
         score_away=None,
+        winner=None,
         is_finished=False
     )
 

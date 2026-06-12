@@ -10,7 +10,11 @@ import axios from "axios";
 
 const envBase = (import.meta.env.VITE_API_URL || "").replace(/\/$/, "");
 // Prefer explicit backend URL from env; fallback to same-origin /api for local/proxy setups.
-const API_BASE_URL = envBase ? `${envBase}/api` : "/api";
+const API_BASE_URL = envBase
+  ? envBase.endsWith("/api")
+    ? envBase
+    : `${envBase}/api`
+  : "/api";
 
 const api = axios.create({
   baseURL: API_BASE_URL,
