@@ -1,8 +1,9 @@
 import React, {useState, useEffect} from "react";
-import {getLeaderboard} from "../api";
+import {getLeaderboard, getChampionPrediction} from "../api";
 
 function Leaderboard() {
   const [leaderboard, setLeaderboard] = useState([]);
+  const [champions, setChampions] = useState({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -17,6 +18,22 @@ function Leaderboard() {
         ? response.data.filter((entry) => !entry.is_admin)
         : [];
       setLeaderboard(filtered);
+      // Fetch champion predictions for each user
+      const championResults = await Promise.all(
+        filtered.map(async (entry) => {
+          try {
+            const res = await getChampionPrediction(entry.id);
+            return {userId: entry.id, team: res.data.team};
+          } catch {
+            return {userId: entry.id, team: null};
+          }
+        }),
+      );
+      const championMap = {};
+      championResults.forEach((c) => {
+        championMap[c.userId] = c.team;
+      });
+      setChampions(championMap);
       setLoading(false);
     } catch (err) {
       console.error("Error loading leaderboard:", err);
@@ -110,10 +127,10 @@ function Leaderboard() {
                     </td>
                     <td className="text-center py-4 px-6">
                       <span className="font-bold text-yellow-300">
-                        {entry.champion ? (
+                        {champions[entry.id] ? (
                           <>
                             <span className="text-2xl mr-1">👑</span>
-                            {entry.champion}
+                            {champions[entry.id]}
                           </>
                         ) : (
                           <span className="text-slate-500 italic">-</span>

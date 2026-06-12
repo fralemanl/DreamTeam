@@ -11,8 +11,6 @@ except ImportError:
 import secrets
 import smtplib
 import os
-from threading import Lock
-from time import monotonic
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from datetime import timedelta
@@ -106,11 +104,7 @@ class PredictionResponse(BaseModel):
         orm_mode = True
 
 class LeaderboardEntry(BaseModel):
-    id: int
     username: str
-    empresa: Optional[str] = None
-    is_admin: Optional[bool] = False
-    champion: Optional[str] = None
     total_points: int
     correct_results: int
     correct_scores: int
@@ -184,11 +178,6 @@ class UserUpdate(BaseModel):
 
 # FastAPI App
 app = FastAPI(title="DreamTeam API")
-
-
-LEADERBOARD_CACHE_TTL_SECONDS = int(os.environ.get("LEADERBOARD_CACHE_TTL_SECONDS", "30"))
-_leaderboard_cache = {"expires_at": 0.0, "data": None}
-_leaderboard_cache_lock = Lock()
 
 
 @app.get("/")
@@ -768,89 +757,52 @@ def export_predictions(db: Session = Depends(get_db)):
 # Endpoint de Clasificación
 @app.get("/api/leaderboard", response_model=List[LeaderboardEntry])
 def get_leaderboard(db: Session = Depends(get_db)):
-    now = monotonic()
-    with _leaderboard_cache_lock:
-        if _leaderboard_cache["data"] is not None and now < _leaderboard_cache["expires_at"]:
-            return _leaderboard_cache["data"]
-
     users = db.query(User).filter(User.is_admin == False).all()
-    if not users:
-        return []
-
-    user_ids = [u.id for u in users]
-
-    # Carga masiva para evitar N+1 queries.
-    prediction_rows = (
-        db.query(Prediction.user_id, Prediction.points, Match.phase)
-        .join(Match, Prediction.match_id == Match.id)
-        .filter(Prediction.user_id.in_(user_ids), Match.is_finished == True)
-        .all()
-    )
-
-    champion_rows = (
-        db.query(ChampionPrediction.user_id, ChampionPrediction.team)
-        .filter(ChampionPrediction.user_id.in_(user_ids))
-        .all()
-    )
-    champion_by_user = {row.user_id: row.team for row in champion_rows}
-
-    final_match = db.query(Match).filter(Match.phase == "Final", Match.is_finished == True).first()
-    final_winner = final_match.winner if final_match else None
-
-    phase_points = {
-        "Fase de Grupos": {"exacto": 5, "ganador": 3, "parcial": 1},
-        "Dieciseisavos": {"exacto": 6, "ganador": 3},
-        "Octavos": {"exacto": 7, "ganador": 4},
-        "Cuartos": {"exacto": 9, "ganador": 5},
-        "Semifinal": {"exacto": 12, "ganador": 6},
-        "Final": {"exacto": 15, "ganador": 8},
-        "Tercer Lugar": {"exacto": 10, "ganador": 5},
-    }
-
-    stats_by_user = {
-        user_id: {"total_points": 0, "correct_results": 0, "correct_scores": 0}
-        for user_id in user_ids
-    }
-
-    for row in prediction_rows:
-        phase = row.phase if row.phase else "Fase de Grupos"
-        user_stats = stats_by_user[row.user_id]
-        user_stats["total_points"] += row.points
-        if phase in phase_points:
-            if row.points == phase_points[phase]["exacto"]:
-                user_stats["correct_scores"] += 1
-            elif row.points == phase_points[phase]["ganador"]:
-                user_stats["correct_results"] += 1
-
-    if final_winner:
-        for user_id, champion_team in champion_by_user.items():
-            if champion_team == final_winner:
-                stats_by_user[user_id]["total_points"] += 15
-
     leaderboard = []
+    
     for user in users:
-        user_stats = stats_by_user[user.id]
-        leaderboard.append(
-            LeaderboardEntry(
-                id=user.id,
-                username=user.username,
-                empresa=getattr(user, "empresa", None),
-                is_admin=user.is_admin,
-                champion=champion_by_user.get(user.id),
-                total_points=user_stats["total_points"],
-                correct_results=user_stats["correct_results"],
-                correct_scores=user_stats["correct_scores"],
-            )
-        )
-
+        # Filtrar predicciones solo de partidos finalizados
+        predictions = db.query(Prediction).join(Match).filter(Prediction.user_id == user.id, Match.is_finished == True).all()
+        total_points = 0
+        correct_results = 0
+        correct_scores = 0
+        for p in predictions:
+            # Obtener la fase del partido
+            match = db.query(Match).filter(Match.id == p.match_id).first()
+            phase = match.phase if match and match.phase else "Fase de Grupos"
+            # Sistema de puntaje por fase
+            phase_points = {
+                "Fase de Grupos": {"exacto": 5, "ganador": 3, "parcial": 1},
+                "Dieciseisavos": {"exacto": 6, "ganador": 3},
+                "Octavos": {"exacto": 7, "ganador": 4},
+                "Cuartos": {"exacto": 9, "ganador": 5},
+                "Semifinal": {"exacto": 12, "ganador": 6},
+                "Final": {"exacto": 15, "ganador": 8},
+                "Tercer Lugar": {"exacto": 10, "ganador": 5},
+            }
+            # Sumar puntos según la fase y tipo de acierto
+            if phase in phase_points:
+                if p.points == phase_points[phase]["exacto"]:
+                    correct_scores += 1
+                elif p.points == phase_points[phase]["ganador"]:
+                    correct_results += 1
+            total_points += p.points
+        # Sumar 15 puntos si acertó el campeón
+        champion_prediction = db.query(ChampionPrediction).filter(ChampionPrediction.user_id == user.id).first()
+        final_match = db.query(Match).filter(Match.phase == "Final", Match.is_finished == True).first()
+        if champion_prediction and final_match and final_match.winner:
+            if champion_prediction.team == final_match.winner:
+                total_points += 15
+        leaderboard.append(LeaderboardEntry(
+            username=user.username,
+            total_points=total_points,
+            correct_results=correct_results,
+            correct_scores=correct_scores
+        ))
+    
+    # Ordenar por puntos totales
     leaderboard.sort(key=lambda x: x.total_points, reverse=True)
-    serialized_leaderboard = [entry.dict() for entry in leaderboard]
-
-    with _leaderboard_cache_lock:
-        _leaderboard_cache["data"] = serialized_leaderboard
-        _leaderboard_cache["expires_at"] = monotonic() + LEADERBOARD_CACHE_TTL_SECONDS
-
-    return serialized_leaderboard
+    return leaderboard
 
 # Función auxiliar para calcular puntos
 def calculate_points_for_match(match_id: int, db: Session):
