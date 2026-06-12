@@ -86,7 +86,7 @@ function AdminPanel() {
   const loadUsers = async () => {
     try {
       const response = await getUsers();
-      setUsers(response?.data || []);
+      setUsers(Array.isArray(response?.data) ? response.data : []);
     } catch (err) {
       console.error("Error loading users:", err);
     } finally {
@@ -166,7 +166,7 @@ function AdminPanel() {
   const loadMatches = async () => {
     try {
       const response = await getMatches();
-      setMatches(response?.data || []);
+      setMatches(Array.isArray(response?.data) ? response.data : []);
     } catch (err) {
       console.error("Error loading matches:", err);
     } finally {
