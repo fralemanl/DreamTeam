@@ -15,8 +15,13 @@ is_railway = any(
 )
 
 if is_railway:
-    # En Railway: usa /data si hay volumen; sin volumen usa /tmp (ephemeral)
-    data_dir = "/data" if os.path.isdir("/data") else "/tmp"
+    # En Railway: usa /mount si hay volumen; fallback /data; sin volumen usa /tmp (ephemeral)
+    if os.path.isdir("/mount"):
+        data_dir = "/mount"
+    elif os.path.isdir("/data"):
+        data_dir = "/data"
+    else:
+        data_dir = "/tmp"
     os.makedirs(data_dir, exist_ok=True)
     db_path = os.path.join(data_dir, "quiniela.db")
 elif os.environ.get("RENDER") == "true":
