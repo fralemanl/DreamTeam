@@ -3,10 +3,10 @@ from fastapi import Request
 # ...existing code...
 from pydantic import Field
 try:
-    from .database import SessionLocal, engine, Base, DB_FILE_PATH, DB_BACKEND, IS_EPHEMERAL_SQLITE
+    from .database import SessionLocal, engine, Base
     from .models import User, Match, Prediction, ChampionPrediction
 except ImportError:
-    from database import SessionLocal, engine, Base, DB_FILE_PATH, DB_BACKEND, IS_EPHEMERAL_SQLITE
+    from database import SessionLocal, engine, Base
     from models import User, Match, Prediction, ChampionPrediction
 import secrets
 import smtplib
@@ -194,31 +194,9 @@ def run_migrations():
     """Crea tablas si no existen y agrega columnas nuevas (migracion automatica)."""
     from sqlalchemy import text
     try:
-        from .database import (
-            Base as _Base,
-            engine as _engine,
-            SessionLocal as _SessionLocal,
-            DB_FILE_PATH as _DB_FILE_PATH,
-            DB_BACKEND as _DB_BACKEND,
-            IS_EPHEMERAL_SQLITE as _IS_EPHEMERAL_SQLITE,
-        )
+        from .database import Base as _Base, engine as _engine, SessionLocal as _SessionLocal
     except ImportError:
-        from database import (
-            Base as _Base,
-            engine as _engine,
-            SessionLocal as _SessionLocal,
-            DB_FILE_PATH as _DB_FILE_PATH,
-            DB_BACKEND as _DB_BACKEND,
-            IS_EPHEMERAL_SQLITE as _IS_EPHEMERAL_SQLITE,
-        )
-
-    if _DB_BACKEND == "sqlite":
-        print(f"[DB] SQLite file: {_DB_FILE_PATH}")
-        if _IS_EPHEMERAL_SQLITE:
-            print("[DB][WARN] SQLite en /tmp (ephemeral). Verifica el mount path del volumen.")
-    else:
-        print("[DB] Using DATABASE_URL / SQLALCHEMY_DATABASE_URL (non-SQLite)")
-
+        from database import Base as _Base, engine as _engine, SessionLocal as _SessionLocal
     # Crear todas las tablas si la BD está vacía o es nueva
     _Base.metadata.create_all(bind=_engine)
     # Migraciones: agregar columnas nuevas si no existen
@@ -923,11 +901,8 @@ from fastapi.responses import FileResponse
 
 @app.get("/download-db")
 def download_db():
-    if DB_BACKEND != "sqlite" or not DB_FILE_PATH:
-        raise HTTPException(status_code=400, detail="Descarga disponible solo para SQLite local")
-    if not os.path.exists(DB_FILE_PATH):
-        raise HTTPException(status_code=404, detail=f"No se encontró la base de datos en {DB_FILE_PATH}")
-    return FileResponse(DB_FILE_PATH, filename="dreamteam.db")
+    db_path = "/tmp/dreamteam.db"  # O usa "/tmp/dreamteam.db" si tu db está ahí
+    return FileResponse(db_path, filename="dreamteam.db")
 
 @app.post("/api/import-matches")
 async def import_matches(request: Request, db: Session = Depends(get_db)):
