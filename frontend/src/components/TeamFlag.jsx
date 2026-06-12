@@ -3,81 +3,81 @@ import React from "react";
 // Mapeo de países a archivos de imágenes locales
 const countryData = {
   // CONCACAF
-  Mexico: "mx.png",
-  "United States": "US.png",
-  Canada: "CA.png",
+  México: "mx.png",
+  "Estados Unidos": "US.png",
+  Canadá: "CA.png",
   "Costa Rica": "CR.png", // Por clasificar
   Jamaica: "JM.png", // Por clasificar
-  Panama: "PA.png",
+  Panamá: "PA.png",
   Honduras: "HN.png", // Por clasificar
-  Haiti: "Ht.png",
-  Curacao: "CW.png",
+  Haití: "Ht.png",
+  Curazao: "CW.png",
 
   // CONMEBOL
   Argentina: "AR.png",
-  Brazil: "BR.png",
+  Brasil: "BR.png",
   Uruguay: "Uy.png",
   Colombia: "CO.png",
   Chile: "CL.png", // Por clasificar
   Ecuador: "EC.png",
-  Peru: "PE.png", // Por clasificar
+  Perú: "PE.png", // Por clasificar
   Paraguay: "PY.png",
   Venezuela: "VE.png", // Por clasificar
   Bolivia: "BO.png", // Por clasificar
 
   // UEFA (Europa)
-  Spain: "ES.png",
-  Germany: "de.png",
-  France: "FR.png",
-  Italy: "IT.png", // Por clasificar
-  England: "uk.png",
+  España: "ES.png",
+  Alemania: "de.png",
+  Francia: "FR.png",
+  Italia: "IT.png", // Por clasificar
+  Inglaterra: "uk.png",
   Portugal: "Pt.png",
-  Netherlands: "NL.png",
-  Holland: "NL.png",
-  Belgium: "BE.png",
-  Croatia: "hr.png",
-  Switzerland: "ch.png",
-  Denmark: "DK.png", // Por clasificar
-  Sweden: "SE.png", // Por clasificar
-  Poland: "PL.png", // Por clasificar
+  "Países Bajos": "NL.png",
+  Holanda: "NL.png",
+  Bélgica: "BE.png",
+  Croacia: "hr.png",
+  Suiza: "ch.png",
+  Dinamarca: "DK.png", // Por clasificar
+  Suecia: "SE.png", // Por clasificar
+  Polonia: "PL.png", // Por clasificar
   Austria: "AT.png",
   Serbia: "RS.png", // Por clasificar
-  Ukraine: "UA.png", // Por clasificar
-  Wales: "GB-WLS.png", // Por clasificar
-  Scotland: "GB-SCT.png", // Por clasificar
-  Norway: "NO.png",
-  "Czech Republic": "CZ.png", // Por clasificar
+  Ucrania: "UA.png", // Por clasificar
+  Gales: "GB-WLS.png", // Por clasificar
+  Escocia: "GB-SCT.png", // Por clasificar
+  Noruega: "NO.png",
+  "República Checa": "CZ.png", // Por clasificar
   "Bosnia-Herzegovina": "BH.png", // Por clasificar
-  Turkey: "TR.png", // Por clasificar
+  Turquía: "TR.png", // Por clasificar
 
   // AFC (Asia)
-  Japan: "JP.png",
-  "South Korea": "KR.png",
-  "Saudi Arabia": "SA.png",
-  Iran: "IR.png",
+  Japón: "JP.png",
+  "Corea del Sur": "KR.png",
+  "Arabia Saudita": "SA.png",
+  Irán: "IR.png",
   Australia: "AU.png",
   Qatar: "QA.png",
-  Jordan: "JO.png",
-  Uzbekistan: "UZ.png",
+  Jordania: "JO.png",
+  Uzbekistán: "UZ.png",
 
   // CAF (África)
-  Morocco: "MA.png",
+  Marruecos: "MA.png",
   Senegal: "SN.png",
-  Tunisia: "TN.png",
+  Túnez: "TN.png",
   Ghana: "GH.png",
-  Cameroon: "CM.png", // Por clasificar
+  Camerún: "CM.png", // Por clasificar
   Nigeria: "NG.png", // Por clasificar
-  Egypt: "EG.png",
-  Algeria: "dz.png",
-  "Côte d'Ivoire": "CI.png",
-  "Cape Verde": "CV.png",
-  "South Africa": "za.png",
-  "Congo DR": "CD.png",
+  Egipto: "EG.png",
+  Argelia: "dz.png",
+  "Costa de Marfil": "CI.png",
+  "Cabo Verde": "CV.png",
+  "Sudáfrica": "za.png",
+  "Congo": "CD.png",
   Seychelles: "SC.png",
-  Iraq: "IQ.png", // Por clasificar
+  Irak: "IQ.png", // Por clasificar
 
   // OFC
-  "New Zealand": "NZ.png",
+  "Nueva Zelanda": "NZ.png",
 };
 
 function TeamFlag({team, size = 24, showName = true}) {
